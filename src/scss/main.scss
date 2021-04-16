@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 1em;
+}
+
+.container {
+  margin: 0 auto;
+  width: 800px;
+}
+
+.button {
+  cursor: pointer;
+  border: none;
+  padding: 1em 2em;
+  text-decoration: none;
+  border-radius: 10px;
+}
