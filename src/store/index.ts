@@ -25,25 +25,32 @@ export default new Vuex.Store<State>({
     deleteContact({ commit }, id: number) {
       commit('deleteContact', id);
     },
+    updateContact({ commit }, updatedContact: Contact) {
+      commit('updateContact', updatedContact);
+    },
   },
   mutations: {
-    setContacts(state, contacts: Contact[]) {
-      state.contacts = contacts;
-    },
-    addContact(state, newContact) {
-      const newContactWithId = { ...newContact };
+    addContact(state, newContact: ContactForm) {
+      let newId;
       if (state.contacts.length > 0) {
-        newContactWithId.id = Math.max(...state.contacts.map((contact) => contact.id)) + 1;
+        newId = Math.max(...state.contacts.map((contact) => contact.id)) + 1;
       } else {
-        newContactWithId.id = 1;
+        newId = 1;
       }
+      const newContactWithId: Contact = { ...newContact, id: newId };
 
       state.contacts.push(newContactWithId);
 
       router.push(`contacts/${newContactWithId.id}`);
     },
-    deleteContact(state, id) {
+    deleteContact(state, id: number) {
       state.contacts = state.contacts.filter((contact) => contact.id !== id);
+    },
+    updateContact(state, updatedContact: Contact) {
+      const contactIndex = state.contacts.findIndex((contact) => contact.id === updatedContact.id);
+      // state.contacts[contactIndex].customFields = updatedContact.customFields;
+      // Vue.set(state.contacts[contactIndex], 'customFields', updatedContact.customFields);
+      Vue.set(state.contacts, contactIndex, updatedContact);
     },
   },
   modules: {},

@@ -30,9 +30,9 @@ import { mapActions } from 'vuex';
 export default Vue.extend({
   name: 'ContactPreview',
   props: {
-    firstName: String,
+    firstName: { type: String, required: true },
     lastName: String,
-    id: Number,
+    id: { type: Number, required: true },
     photoUrl: String,
   },
   methods: mapActions(['deleteContact']),

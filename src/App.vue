@@ -11,6 +11,7 @@ import Header from '@/components/Header.vue';
 
 // TODO Абстракция над кнопкой для блокировки во время вызова модального окна
 // TODO Reusable модальное окно подтверждения действия
+// TODO transitions
 
 export default Vue.extend({
   components: {

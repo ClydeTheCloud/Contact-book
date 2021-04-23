@@ -34,12 +34,12 @@ export default Vue.extend({
 .contact-list {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
 
   &__no-contacts-message {
-    margin: 0 1em;
+    margin: 0 auto;
     font-size: 2rem;
-    // color: $color-3;
   }
 }
 </style>

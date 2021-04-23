@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <ContactCard v-if="contact" v-bind="contact" />
+    <ContactCard v-if="contactIsPresent" :id="Number(this.$route.params.id)" />
     <p v-else>Контакт не найден.</p>
   </div>
 </template>
@@ -9,7 +9,6 @@
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import ContactCard from '../components/ContactCard.vue';
-import { Contact } from '../types';
 
 export default Vue.extend({
   name: 'Contact',
@@ -18,8 +17,8 @@ export default Vue.extend({
   },
   computed: {
     ...mapGetters(['getById']),
-    contact(): Contact {
-      return this.getById(this.$route.params.id);
+    contactIsPresent() {
+      return !!this.getById(this.$route.params.id);
     },
   },
 });

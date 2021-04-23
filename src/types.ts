@@ -14,25 +14,45 @@ export interface Contact {
 
 export type ContactForm = Omit<Contact, 'id'>;
 
+export type MainInputs = Omit<Contact, 'id' | 'customFields'>;
+export interface MainInputsWithFields extends MainInputs {
+  newCustomFields: CustomField[];
+}
+
+export type ContactCardData = {
+  previousState: {
+    steps: Contact[];
+    currentStep: number;
+  };
+  isEditing: boolean;
+  editingState: {
+    contact: MainInputsWithFields;
+    submitError: SubmitError;
+  };
+};
+
 export interface State {
   contacts: Contact[];
 }
 
+export interface NewField {
+  error: string;
+  isOpen: boolean;
+  name: string;
+}
+
 export interface InputFormData {
   newContact: ContactForm;
-  newField: {
-    error: string;
-    isOpen: boolean;
-    name: string;
-  };
 }
 
 export interface InputFormWithError extends InputFormData {
-  submitError: {
-    message: string;
-    fields: {
-      firstName: boolean;
-      phoneNumber: boolean;
-    };
+  submitError: SubmitError;
+}
+
+export interface SubmitError {
+  message: string;
+  fields: {
+    firstName: boolean;
+    phoneNumber: boolean;
   };
 }

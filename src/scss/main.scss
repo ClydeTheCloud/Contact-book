@@ -22,3 +22,29 @@ h4 {
   text-decoration: none;
   border-radius: 10px;
 }
+
+.button-icon {
+  line-height: 0;
+  border: 2px solid $color-2;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 99px;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 2px 2px $color-1;
+  }
+
+  &__img {
+    width: 25px;
+  }
+}
+
+.editing-error-message {
+  font-weight: bold;
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: $color-6;
+}
