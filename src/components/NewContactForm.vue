@@ -92,7 +92,6 @@ export default Vue.extend({
     },
     // Добавляет контакт во Vuex при отсутсвии ошибок
     submit(): void {
-      console.log('submit');
       if (this.newContact.firstName && this.newContact.phoneNumber) {
         this.addContact(this.newContact);
       } else {
