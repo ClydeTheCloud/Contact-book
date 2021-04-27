@@ -17,7 +17,7 @@ export default Vue.extend({
   },
   computed: {
     ...mapGetters(['getById']),
-    contactIsPresent() {
+    contactIsPresent(): boolean {
       return !!this.getById(this.$route.params.id);
     },
   },

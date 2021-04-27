@@ -1,9 +1,12 @@
 <template>
+  <!-- Форма для добавления нового контакта -->
   <form @submit.prevent="submit" @change="resetError" class="new-contact-form">
+    <!-- Сообщение об ошибке в основных данных -->
     <p v-if="submitError.message" class="editing-error-message">
       {{ submitError.message }}
     </p>
 
+    <!-- Инпуты для редактирования основной информации -->
     <MainInputs
       :firstName="newContact.firstName"
       :lastName="newContact.lastName"
@@ -17,16 +20,22 @@
       :phoneNumberError="submitError.fields.phoneNumber"
     />
 
+    <!-- Дополнительные поля контакта и инпуты для них -->
     <label v-for="field in newContact.customFields" :key="field.name">
       <p class="new-contact-form__lable-text lable-text">
         {{ field.name }}
       </p>
       <input v-model.trim="field.value" type="text" class="main-input" />
-      <button @click="removeCustomField(field.name)" class="new-contact-form__remove-field-button">
+      <button
+        type="button"
+        @click="removeCustomField(field.name)"
+        class="new-contact-form__remove-field-button"
+      >
         &times;
       </button>
     </label>
 
+    <!-- Компонент для добавления новых полей -->
     <AddCustomField
       :customFields="newContact.customFields"
       @new-custom-field-added="addCustomField"
@@ -51,6 +60,7 @@ export default Vue.extend({
   },
   data(): InputFormWithError {
     return {
+      // Данные нового контакта
       newContact: {
         firstName: '',
         lastName: '',
@@ -58,6 +68,7 @@ export default Vue.extend({
         customFields: [],
         photoUrl: '',
       },
+      // Данные об ошибках
       submitError: {
         message: '',
         fields: {
@@ -69,14 +80,17 @@ export default Vue.extend({
   },
   methods: {
     ...mapActions(['addContact']),
+    // Добавляет дополнительное поле
     addCustomField(newFieldName: string): void {
       this.newContact.customFields.push({ name: newFieldName, value: '' });
     },
+    // Удаляет дополнительное поле
     removeCustomField(name: string): void {
       this.newContact.customFields = this.newContact.customFields.filter(
         (field) => field.name !== name,
       );
     },
+    // Добавляет контакт во Vuex при отсутсвии ошибок
     submit(): void {
       console.log('submit');
       if (this.newContact.firstName && this.newContact.phoneNumber) {
@@ -87,6 +101,7 @@ export default Vue.extend({
         this.submitError.message = 'Отмеченные поля обязательны для заполнения';
       }
     },
+    // Сбрасывает ошибки
     resetError(): void {
       this.submitError.message = '';
       this.submitError.fields.firstName = false;
@@ -129,6 +144,10 @@ export default Vue.extend({
     font-size: 1rem;
     color: $color-1;
     background-color: $color-2;
+  }
+
+  @media screen and (max-width: $tablet) {
+    width: 90%;
   }
 }
 

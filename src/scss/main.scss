@@ -48,3 +48,64 @@ h4 {
   transform: translateX(-50%);
   color: $color-6;
 }
+
+// Media queries
+
+@media screen and (max-width: $laptop) {
+  .container {
+    width: 700px;
+  }
+}
+
+@media screen and (max-width: $tablet) {
+  .container {
+    width: min(90%, 600px);
+  }
+}
+
+@media screen and (max-width: $mobile) {
+  .container {
+    width: min(90%, 400px);
+  }
+}
+
+@media screen and (max-width: $mobile-sm) {
+  .container {
+    width: min(90%, 300px);
+  }
+}
+
+// Transitions - анимации
+
+// Fade
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s, transform 0.25s;
+}
+.fade-enter,
+.fade-leave-to {
+  transform: translateY(-15px);
+  opacity: 0;
+}
+
+// Slide
+
+.slide-enter-active,
+.slide-leave-active {
+  transform: translateX(0px);
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+.slide-enter,
+.slide-leave-to {
+  opacity: 0;
+}
+
+.slide-enter {
+  transform: translateX(20px);
+}
+
+.slide-leave-to {
+  transform: scale(0.9);
+}

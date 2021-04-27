@@ -56,3 +56,9 @@ export interface SubmitError {
     phoneNumber: boolean;
   };
 }
+
+export interface ModalConfirmComponentData {
+  isOpen: boolean;
+  message: string | undefined;
+  onAccept: Function | undefined;
+}

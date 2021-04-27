@@ -18,6 +18,7 @@ export default Vue.extend({
 <style lang="scss">
 .header {
   position: relative;
+  border: solid 1px transparent;
 
   &__home-button {
     position: absolute;
@@ -30,6 +31,27 @@ export default Vue.extend({
     &:hover {
       color: $color-3;
     }
+
+    @media screen and (max-width: $tablet) {
+      top: 25%;
+    }
   }
+
+  @media screen and (max-width: $tablet) {
+    font-size: 0.9em;
+
+    h1 {
+      margin: 2em 0;
+    }
+  }
+
+  // @media screen and (max-width: $mobile) {
+  //   font-size: 0.8em;
+  //   h1 {
+  //     display: block;
+  //     width: 50%;
+  //     margin: 1em auto;
+  //   }
+  // }
 }
 </style>

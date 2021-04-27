@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <section class="contact-card">
+      <!-- Кнопка для отмены действия - шаг назад -->
       <button
         @click="undoChange"
         class="contact-card__undo-button button-icon"
@@ -8,6 +9,7 @@
       >
         <img src="@/assets/undo.svg" class="button-icon__img" alt="Шаг назад" />
       </button>
+      <!-- Кнопка для повтора действия - шаг вперёд -->
       <button
         @click="redoChange"
         class="contact-card__redo-button button-icon"
@@ -23,10 +25,12 @@
         class="contact-card__photo"
       />
 
+      <!-- Сообщение об ошибке при редактировании -->
       <p v-if="editingState.submitError.message" class="editing-error-message">
         {{ editingState.submitError.message }}
       </p>
 
+      <!-- Блок с основной информацией о контакте в режиме просмотре -->
       <div v-if="!isEditing" class="contact-card__main-info">
         <h2 class="contact-card__name">
           {{ currentState.firstName + ' ' + currentState.lastName }}
@@ -36,7 +40,9 @@
         </a>
       </div>
 
+      <!-- Блок с основной информацией о контакте в режиме редактирования -->
       <div v-else class="contact-card__main-info contact-card__main-info--editing">
+        <!-- Инпуты для редактирования основной информации -->
         <MainInputs
           :firstName="editingState.contact.firstName"
           :lastName="editingState.contact.lastName"
@@ -50,6 +56,9 @@
           :phoneNumberError="editingState.submitError.fields.phoneNumber"
         />
 
+        <!-- Здесь отображаются новые поля контакта, -->
+        <!-- добавленные во время редактирования, -->
+        <!-- но ещё не сохранённые во Vuex -->
         <label
           v-for="field in editingState.contact.newCustomFields"
           :key="field.name"
@@ -67,6 +76,7 @@
           </button>
         </label>
 
+        <!-- Компонент для добавления новых полей -->
         <AddCustomField
           :customFields="currentState.customFields"
           @new-custom-field-added="addCustomFieldWhileEditing"
@@ -78,10 +88,12 @@
         </button>
       </div>
 
+      <!-- Перевод блока основной информации в режим редактирования -->
       <button v-if="!isEditing" @click="isEditing = !isEditing" class="contact-card__button button">
         Редактировать
       </button>
 
+      <!-- Все дополнительные поля контакта -->
       <ContactCardField
         v-for="field in currentState.customFields"
         :key="field.name"
@@ -111,19 +123,24 @@ export default Vue.extend({
   },
   data(): ContactCardData {
     return {
+      // Обект для контроля за произошедшими изменениями
       previousState: {
         steps: [],
         currentStep: -1,
       },
+      // Редим редактирования
       isEditing: false,
+      // Здесь хранится состояние основных полей контака во время его редактирования...
       editingState: {
         contact: {
           firstName: '',
           lastName: '',
           phoneNumber: '',
           photoUrl: '',
+          // ... + новые поля
           newCustomFields: [],
         },
+        // Информация об ошибках
         submitError: {
           message: '',
           fields: {
@@ -153,6 +170,8 @@ export default Vue.extend({
   },
   methods: {
     ...mapActions(['updateContact']),
+    // Отправляет новые данные контакта во Vuex...
+    // ...сохраняет предыдущее состояние для возможности отмены действия
     commitChange(updatedContact: Contact): void {
       const clonedCurrentState = cloneDeep(updatedContact);
       if (this.previousState.steps.length > this.previousState.currentStep + 1) {
@@ -162,50 +181,47 @@ export default Vue.extend({
       this.previousState.currentStep += 1;
       this.updateContact(updatedContact);
     },
+    // Обновляет значение дополнительного поля контакта
     updateField(field: CustomField): void {
       const newState = cloneDeep(this.currentState);
       const fieldIndex = newState.customFields.findIndex((f: CustomField) => f.name === field.name);
       newState.customFields[fieldIndex] = field;
       this.commitChange(newState);
     },
+    // Добавялет новое поле к контакту в режиме редактирования основных данных
     addCustomFieldWhileEditing(newFieldName: string): void {
       this.editingState.contact.newCustomFields.push({ name: newFieldName, value: '' });
     },
+    // Удаляет новое поле к контакту в режиме редактирования основных данных
     removeCustomFieldWhileEditing(name: string): void {
       this.editingState.contact.newCustomFields = this.editingState.contact.newCustomFields.filter(
         (field) => field.name !== name,
       );
     },
+    // Удаляет существующее поле
     deleteField(field: CustomField): void {
       const newState: Contact = cloneDeep(this.currentState);
       const fieldIndex = newState.customFields.findIndex((f: CustomField) => f.name === field.name);
       newState.customFields.splice(fieldIndex, 1);
       this.commitChange(newState);
     },
+    // Шаг назад
     undoChange(): void {
       if (this.previousState.currentStep < 1) {
-        console.log('нечего отменять');
         return;
       }
-      console.log('отмена, шаг назад');
-      console.log('шаг', this.previousState.currentStep);
       this.previousState.currentStep -= 1;
       this.updateContact(this.previousState.steps[this.previousState.currentStep]);
     },
+    // Шаг вперёд
     redoChange(): void {
       if (this.previousState.currentStep + 1 === this.previousState.steps.length) {
-        console.log('нечего возвращать');
         return;
       }
-      console.log(
-        'возвращяемое состояние',
-        this.previousState.steps[this.previousState.currentStep],
-      );
-      console.log('массив состояний', this.previousState.steps);
-      console.log('шаг', this.previousState.currentStep);
       this.previousState.currentStep += 1;
       this.updateContact(this.previousState.steps[this.previousState.currentStep]);
     },
+    // Обновляет основные данные (и добавляет новые поля) изменённые в ходе редактирования контакта
     updateContactInfo(): void {
       if (this.editingState.contact.firstName && this.editingState.contact.phoneNumber) {
         // Сохраняем новую контактную информацию
@@ -227,8 +243,8 @@ export default Vue.extend({
         this.editingState.submitError.message = 'Отмеченные поля обязательны для заполнения';
       }
     },
+    // Отмена обновления контактной информации
     cancelUpdateOfContactInfo(): void {
-      // Отмена обновления контактной информации
       this.setEditingStateToProps();
       this.isEditing = false;
       this.resetErrors();
@@ -263,10 +279,17 @@ export default Vue.extend({
   padding-top: 3rem;
   max-width: 550px;
   margin: 0 auto;
+  margin-bottom: 3rem;
+  word-wrap: break-word;
 
   &__name {
     margin: 1rem 0;
     font-size: 3rem;
+    width: 100%;
+
+    @media screen and (max-width: $mobile) {
+      font-size: 2rem;
+    }
   }
 
   &__phone-number {
@@ -275,12 +298,20 @@ export default Vue.extend({
     text-decoration: none;
     font-size: 1.5rem;
     margin: 1rem 0;
+    @media screen and (max-width: $mobile) {
+      font-size: 1.25rem;
+    }
   }
 
   &__photo {
     max-height: 200px;
     width: auto;
     border-radius: 10px;
+
+    @media screen and (max-width: $mobile) {
+      max-width: 100%;
+      height: auto;
+    }
   }
 
   &__button {
@@ -305,6 +336,21 @@ export default Vue.extend({
 
     .button-icon__img {
       width: 35px;
+    }
+  }
+
+  @media screen and (max-width: $mobile) {
+    &__undo-button {
+      left: 0.5rem;
+    }
+
+    &__redo-button {
+      right: 0.5rem;
+    }
+
+    &__undo-button,
+    &__redo-button {
+      top: 0.5rem;
     }
   }
 

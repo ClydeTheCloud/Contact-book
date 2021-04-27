@@ -1,6 +1,6 @@
 <template>
   <div class="add-custom-field">
-    <button @click="openCustomField" v-if="!isOpen" class="add-custom-field__button">
+    <button @click="openCustomField" type="button" v-if="!isOpen" class="add-custom-field__button">
       + Новое поле
     </button>
 
@@ -19,11 +19,12 @@
           :class="{ '--input-error': error }"
         />
       </label>
+
       <div class="add-custom-field__custom-field-controls">
         <button @click.prevent="addCustomField" class="add-custom-field__button">
           Добавить поле
         </button>
-        <button @click="cancelCustomField" class="add-custom-field__button">
+        <button type="button" @click="cancelCustomField" class="add-custom-field__button">
           Отмена
         </button>
       </div>
@@ -52,9 +53,9 @@ export default Vue.extend({
   },
 
   methods: {
+    // Добавляет новое поле в форму (передаёт данные в родителя)
     addCustomField(): void {
       if (this.name && this.customFields.every((field: CustomField) => field.name !== this.name)) {
-        // this.newContact.customFields.push({ name: this.newField.name, value: '' });
         this.$emit('new-custom-field-added', this.name);
         this.resetError();
       } else if (this.name) {
@@ -69,6 +70,7 @@ export default Vue.extend({
     openCustomField(): void {
       this.isOpen = true;
     },
+    // Сбрасывает данные и закрывает инпут для нового поля
     resetError(): void {
       this.name = '';
       this.isOpen = false;

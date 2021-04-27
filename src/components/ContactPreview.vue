@@ -2,38 +2,66 @@
   <div class="contact-preview">
     <router-link :to="`/contacts/${id}/`">
       <div class="contact-preview__wrapper">
+        <!-- Аватар контакта... -->
         <div class="contact-preview__avatar">
+          <!-- ...отображает фото (при наличии)... -->
           <img
             v-if="photoUrl"
             :src="photoUrl"
             :alt="`На фото ${firstName} ${lastName}`"
             class="contact-preview__photo"
           />
+          <!-- ...или инициалы, если фото отсутствует. -->
           <p v-else class="contact-preview__initials">{{ firstName[0] }} {{ lastName[0] }}</p>
         </div>
+
         <p class="contact-preview__name">
           {{ firstName }} <br />
           {{ lastName }}
         </p>
       </div>
     </router-link>
-    <button class="contact-preview__delete-button" @click="deleteContact(id)">
-      <p>&times;</p>
-    </button>
+    <!-- Кнопка для удаления контакта -->
+    <ButtonWithConfirmationModal
+      class="contact-preview__delete-button"
+      :modalMessage="deleteModalMessage"
+      :onClick="() => deleteContact(id)"
+      :class="{ 'touch-screen-fix': isUserOnTouchScreen }"
+    >
+      &times;
+    </ButtonWithConfirmationModal>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { mapActions } from 'vuex';
+import ButtonWithConfirmationModal from '@/components/ButtonWithConfirmationModal.vue';
 
 export default Vue.extend({
   name: 'ContactPreview',
+  components: {
+    ButtonWithConfirmationModal,
+  },
   props: {
     firstName: { type: String, required: true },
-    lastName: String,
+    lastName: { type: String, required: false },
     id: { type: Number, required: true },
-    photoUrl: String,
+    photoUrl: { type: String, required: false },
+  },
+  computed: {
+    deleteModalMessage(): string {
+      const name = this.lastName
+        ? this.firstName.concat(' ').concat(this.lastName)
+        : this.firstName;
+      return `Вы уверены что хотите удалить контакт ${name}?`;
+    },
+    // Используется для постоянного отображения кнопки удаления контакта,
+    // если пользователь на устройстве с тач-экраном,
+    // тогда как на десктопе кнопка удаления появляется при наведении или фокусе на контакт
+    isUserOnTouchScreen(): boolean {
+      return !!('ontouchstart' in window);
+    },
   },
   methods: mapActions(['deleteContact']),
 });
@@ -44,6 +72,7 @@ export default Vue.extend({
   @include basicCard;
   position: relative;
   min-width: 250px;
+  margin: 0 auto;
   margin-bottom: 2rem;
   background-color: $color-4;
   transition: all ease-in-out 0.2s;
@@ -51,6 +80,8 @@ export default Vue.extend({
   &__wrapper {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    height: 100%;
   }
 
   &__avatar {
@@ -61,6 +92,7 @@ export default Vue.extend({
     border-radius: 99px;
     margin-right: 1rem;
     overflow: hidden;
+    flex-shrink: 0;
   }
 
   &__photo {
@@ -79,9 +111,11 @@ export default Vue.extend({
   }
 
   &__name {
-    display: grid;
-    place-items: center;
+    vertical-align: middle;
     text-align: right;
+    word-wrap: break-word;
+    flex-shrink: 0;
+    width: 125px;
   }
 
   &__initials {
@@ -113,7 +147,8 @@ export default Vue.extend({
   }
 
   &:hover &__delete-button,
-  &:focus-within &__delete-button {
+  &:focus-within &__delete-button,
+  .touch-screen-fix {
     transform: scale(1);
   }
 
@@ -131,8 +166,6 @@ export default Vue.extend({
     cursor: pointer;
     transition: all ease-in-out 0.2s;
     transform: scale(0);
-    font-weight: bold;
-    font-size: 1.25em;
 
     &:focus {
       outline: none;

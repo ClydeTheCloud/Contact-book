@@ -1,9 +1,13 @@
 <template>
   <div class="contact-field">
+    <!-- Название поля -->
     <p class="contact-field__name">{{ name }}:</p>
+    <!-- Значение поля в режиме просмотра -->
     <p v-if="!isEditing" class="contact-field__value">
       {{ value }}
     </p>
+
+    <!-- Значение поля в режиме редактирования -->
     <div v-else>
       <input
         @keyup="inputEnterKeyHandler"
@@ -12,30 +16,46 @@
         v-model="inputValue"
       />
     </div>
+
+    <!-- Блок кнопок в режиме просмотра -->
     <div v-if="!isEditing" class="contact-field__buttons">
       <button class="contact-field__button button-icon" @click="startEditingHandler">
         <img src="@/assets/edit icon.svg" class="button-icon__img" alt="Редактировать поле" />
       </button>
-      <button class="contact-field__button button-icon" @click="deleteHandler">
+      <ButtonWithConfirmationModal
+        class="contact-field__button button-icon"
+        :modalMessage="'Вы уверены что хотите удалить поле '.concat(name).concat('?')"
+        :onClick="deleteHandler"
+      >
         <img src="@/assets/delete icon.svg" class="button-icon__img" alt="Удалить" />
-      </button>
+      </ButtonWithConfirmationModal>
     </div>
-    <div v-else class="contact-field__buttons contact-field__buttons--editing">
+
+    <!-- Блок кнопок в режиме редактирования -->
+    <div v-else class="contact-field__buttons">
       <button class="contact-field__button button-icon" @click="updateHandler">
         <img src="@/assets/accept icon.svg" class="button-icon__img" alt="Сохранить" />
       </button>
-      <button class="contact-field__button button-icon" @click="cancelEditing">
+      <ButtonWithConfirmationModal
+        class="contact-field__button button-icon"
+        :modalMessage="'Внесённые изменения будут потеряны. Продолжить?'"
+        :onClick="cancelEditing"
+      >
         <img src="@/assets/cancel icon.svg" class="button-icon__img" alt="Отменить" />
-      </button>
+      </ButtonWithConfirmationModal>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import ButtonWithConfirmationModal from '@/components/ButtonWithConfirmationModal.vue';
 
 export default Vue.extend({
   name: 'ContactCardField',
+  components: {
+    ButtonWithConfirmationModal,
+  },
   data() {
     return {
       isEditing: false,
@@ -49,23 +69,27 @@ export default Vue.extend({
     delete: { type: Function, required: true },
   },
   methods: {
-    inputEnterKeyHandler(e: KeyboardEvent) {
+    inputEnterKeyHandler(e: KeyboardEvent): void {
       if (e.key === 'Enter') {
         this.updateHandler();
       }
     },
-    updateHandler() {
+    // Обновляет значение поля
+    updateHandler(): void {
       this.update({ name: this.name, value: this.inputValue });
       this.isEditing = false;
     },
-    deleteHandler() {
+    // Удаляет поле
+    deleteHandler(): void {
       this.delete({ name: this.name, value: this.inputValue });
     },
-    cancelEditing() {
+    // Отмена редактирования поля, сброс значения инпута к изначальному
+    cancelEditing(): void {
       this.inputValue = this.value;
       this.isEditing = false;
     },
-    startEditingHandler() {
+    // Переход в режим редактирования значения поля
+    startEditingHandler(): void {
       this.inputValue = this.value;
       this.isEditing = true;
     },

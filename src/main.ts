@@ -5,6 +5,9 @@ import store from './store';
 
 Vue.config.productionTip = false;
 
+// Хаб для обработки событий, всязанных с модальными окнами
+Vue.prototype.$modalEventHub = new Vue();
+
 new Vue({
   router,
   store,

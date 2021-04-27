@@ -1,4 +1,5 @@
 <template>
+  <!-- Поля для основной информации о контакте -->
   <div class="main-inputs">
     <label>
       <p class="main-inputs__lable-text">
@@ -49,19 +50,20 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'NewContactForm',
   props: {
-    firstNameError: Boolean,
-    phoneNumberError: Boolean,
-    firstName: String,
-    lastName: String,
-    phoneNumber: String,
-    photoUrl: String,
+    firstNameError: { type: Boolean, required: true },
+    phoneNumberError: { type: Boolean, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
+    photoUrl: { type: String, required: true },
   },
+  // Геттеры и сеттеры для контроля значения полей из родительского компонента
   computed: {
     firstNameValue: {
       get(): string {
         return this.firstName;
       },
-      set(value: string) {
+      set(value: string): void {
         this.$emit('inputFirstName', value);
       },
     },
@@ -69,7 +71,7 @@ export default Vue.extend({
       get(): string {
         return this.lastName;
       },
-      set(value: string) {
+      set(value: string): void {
         this.$emit('inputLastName', value);
       },
     },
@@ -77,7 +79,7 @@ export default Vue.extend({
       get(): string {
         return this.phoneNumber;
       },
-      set(value: string) {
+      set(value: string): void {
         this.$emit('inputPhoneNumber', value);
       },
     },
@@ -85,7 +87,7 @@ export default Vue.extend({
       get(): string {
         return this.photoUrl;
       },
-      set(value: string) {
+      set(value: string): void {
         this.$emit('inputPhotoUrl', value);
       },
     },
@@ -104,8 +106,8 @@ export default Vue.extend({
   font-size: 1.15rem;
   border-radius: 0.25em;
   border: none;
-  // background-color: $color-4;
 }
+
 .main-inputs {
   width: 100%;
 

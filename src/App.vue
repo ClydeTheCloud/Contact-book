@@ -1,21 +1,22 @@
 <template>
   <div id="app">
     <Header />
-    <router-view />
+    <transition mode="out-in" name="slide">
+      <router-view />
+    </transition>
+    <ModalConfirm />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Header from '@/components/Header.vue';
-
-// TODO Абстракция над кнопкой для блокировки во время вызова модального окна
-// TODO Reusable модальное окно подтверждения действия
-// TODO transitions
+import ModalConfirm from '@/components/ModalConfirm.vue';
 
 export default Vue.extend({
   components: {
     Header,
+    ModalConfirm,
   },
 });
 </script>
@@ -25,8 +26,6 @@ export default Vue.extend({
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: $color-1;
 }

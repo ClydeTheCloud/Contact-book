@@ -4,6 +4,7 @@
       В вашей книге контактов пусто.
     </p>
 
+    <!-- Отображает список контактов -->
     <ContactPreview
       v-else
       v-for="contact in allContacts"
@@ -33,8 +34,7 @@ export default Vue.extend({
 <style lang="scss">
 .contact-list {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
 
   &__no-contacts-message {

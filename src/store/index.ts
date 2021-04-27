@@ -48,8 +48,6 @@ export default new Vuex.Store<State>({
     },
     updateContact(state, updatedContact: Contact) {
       const contactIndex = state.contacts.findIndex((contact) => contact.id === updatedContact.id);
-      // state.contacts[contactIndex].customFields = updatedContact.customFields;
-      // Vue.set(state.contacts[contactIndex], 'customFields', updatedContact.customFields);
       Vue.set(state.contacts, contactIndex, updatedContact);
     },
   },
